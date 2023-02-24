@@ -23,7 +23,7 @@ import logging
 import multiprocessing as mp
 import config  
 
-# from vicon import Vicon
+from vicon import Vicon
 from marvel_swarm import Swarm
 from marvel_keyboard import KeyboardInput
 from marvel_logger import Logger
@@ -140,21 +140,21 @@ class Master():
                                                                 self.debug2_shared))
 
     def _init_vicon(self):
-        # self.vicon = Vicon()
-        pass
+        self.vicon = Vicon()
+        # pass
 
     def _init_logger(self):
         self.logger = Logger(folder_name='./logs')
 
     def _share_vicon_data(self):
-        pass
+        # pass
         # Share vicon value
         #TODO: need to use array here. align data to each marvel
         # for i in range(self.marvel_num):
-        # self.pos_shared[:] = self.vicon.position
-        # self.vel_shared[:] = self.vicon.velocity
-        # self.quat_shared[:] = self.vicon.rotation
-        # self.omega_shared[:] = self.vicon.rotation_rate
+        self.pos_shared[:] = self.vicon.position
+        self.vel_shared[:] = self.vicon.velocity
+        self.rpy_shared[:] = quat2rpy(self.vicon.rotation[0], self.vicon.rotation[1], self.vicon.rotation[2], self.vicon.rotation[3])
+        self.agv_shared[:] = self.vicon.rotation_rate
 
     def _share_command(self):
         # Share command values from keyboard

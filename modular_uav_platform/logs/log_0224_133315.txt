@@ -1,0 +1,1 @@
+timestamp,dt,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,roll,pitch,yaw,agv_x,agv_y,agv_z,x_ref,y_ref,z_ref,roll_ref,pitch_ref,yaw_ref,x_vel_ref,y_vel_ref,z_vel_ref,agv_x_ref,agv_y_ref,agv_z_ref
