@@ -57,7 +57,8 @@ class Logger():
                                 "x_vel_ref", "y_vel_ref", "z_vel_ref",
                                 "agv_x_ref", "agv_y_ref", "agv_z_ref"]]
 
-    def log_append(self, timestamp, dt, pos, vel, rpy, agv, pos_ref, rpy_ref, vel_ref, agv_ref):
+    def log_append(self, timestamp, dt, pos=[0.0,0.0,0.0], vel=[0.0,0.0,0.0], rpy=[0.0,0.0,0.0], agv=[0.0,0.0,0.0], 
+                                    pos_ref=[0.0,0.0,0.0], rpy_ref=[0.0,0.0,0.0], vel_ref=[0.0,0.0,0.0], agv_ref=[0.0,0.0,0.0]):
         #TODO:
         #for i in range(self.marvel_num):
         self.log_memory.append([timestamp, dt,
@@ -114,7 +115,7 @@ class Logger():
             writer.writerows(self.log_base_memory)
             print("CSV file: " + "log_base_" + time.strftime("%m%d_%H%M%S") + ".txt" + " created")
     
-    def plot(self):
+    def plot(self, type=None):
         n = len(self.log_memory)
         log_memory_array = np.asarray(self.log_memory[1:n])
         timestamp = log_memory_array[:, 0] - log_memory_array[0, 0]
@@ -145,53 +146,34 @@ class Logger():
         agv_z_ref = log_memory_array[:, i]; i+=1
         print('i=%s ' %i)
 
-        # fig = plt.figure(figsize=(15, 15))
-        # ax0 = fig.add_axes([0.05, 0.05, 0.45, 0.45])
-        # ax0.plot(timestamp, vel_x, 'r', timestamp, vel_y, 'g', timestamp, vel_z, 'b', timestamp, x_vel_ref, 'y--', timestamp, y_vel_ref, 'm--', timestamp, z_vel_ref, 'k--')
-        # ax0.ylabel('vel')
-        # ax0.grid(True)
-        # ax0.legent(loc='upper left')
-        # ax1 = fig.add_axes([0.55, 0.05, 0.95, 0.45])
-        # ax1.plot(timestamp, agv_x, 'r', timestamp, agv_y, 'g', timestamp, agv_z, 'b', timestamp, agv_x_ref, 'y--', timestamp, agv_y_ref, 'm--', timestamp, agv_z_ref, 'k--')
-        # ax1.ylabel('agv')
-        # ax1.grid(True)
-        # ax1.legent(loc='upper left')
-        # ax2 = fig.add_axes([0.05, 0.45, 0.55, 0.95])
-        # ax2.plot(timestamp, pos_x, 'r', timestamp, pos_y, 'g', timestamp, pos_z, 'b', timestamp, x_ref, 'y--', timestamp, y_ref, 'm--', timestamp, z_ref, 'k--')
-        # ax2.ylabel('pos')
-        # ax2.grid(True)
-        # ax2.legent(loc='upper left')
-        # ax3 = fig.add_axes([0.55, 0.55, 0.95, 0.95])
-        # ax3.plot(timestamp, roll, 'r', timestamp, pitch, 'g', timestamp, yaw, 'b', timestamp, roll_ref, 'y--', timestamp, pitch_ref, 'm--', timestamp, yaw_ref, 'k--')
-        # ax3.ylabel('rpy')
-        # ax3.grid(True)
-        # ax3.legent(loc='upper left')
-
-        # plt.show()
-
-        plt.figure(figsize=(15, 15))
-        plt.subplot(2,2,1)
-        plt.plot(timestamp, vel_x, 'r', timestamp, vel_y, 'g', timestamp, vel_z, 'b', timestamp, x_vel_ref, 'y--', timestamp, y_vel_ref, 'm--', timestamp, z_vel_ref, 'k--')
-        plt.ylabel('vel')
-        plt.grid(True)
-        plt.legend(loc='upper left')
-        plt.subplot(2,2,2)
-        plt.plot(timestamp, agv_x, 'r', timestamp, agv_y, 'g', timestamp, agv_z, 'b', timestamp, agv_x_ref, 'y--', timestamp, agv_y_ref, 'm--', timestamp, agv_z_ref, 'k--')
-        plt.ylabel('agv')
-        plt.grid(True)
-        plt.legend(loc='upper left')
-        plt.subplot(2,2,3)
-        plt.plot(timestamp, pos_x, 'r', timestamp, pos_y, 'g', timestamp, pos_z, 'b', timestamp, x_ref, 'y--', timestamp, y_ref, 'm--', timestamp, z_ref, 'k--')
-        plt.ylabel('pos')
-        plt.grid(True)
-        plt.legend(loc='upper left')
-        plt.subplot(2,2,4)
-        plt.plot(timestamp, roll, 'r', timestamp, pitch, 'g', timestamp, yaw, 'b', timestamp, roll_ref, 'y--', timestamp, pitch_ref, 'm--', timestamp, yaw_ref, 'k--')
-        plt.ylabel('rpy')
-        plt.grid(True)
-        plt.legend(loc='upper left')
+        if type == None:
+            self.plot_all(timestamp, pos_x, pos_y, pos_z, x_ref, y_ref, z_ref, vel_x, vel_y, vel_z, x_vel_ref, y_vel_ref, z_vel_ref,
+                roll, pitch, yaw, roll_ref, pitch_ref, yaw_ref, agv_x, agv_y, agv_z, agv_x_ref, agv_y_ref, agv_z_ref)
+        elif type == 'attitude':
+            self.plot_attitude(timestamp, roll, pitch, yaw, roll_ref, pitch_ref, yaw_ref, agv_x, agv_y, agv_z, agv_x_ref, agv_y_ref, agv_z_ref)
+        # plt.figure(figsize=(15, 15))
+        # plt.subplot(2,2,1)
+        # plt.plot(timestamp, vel_x, 'r', timestamp, vel_y, 'g', timestamp, vel_z, 'b', timestamp, x_vel_ref, 'y--', timestamp, y_vel_ref, 'm--', timestamp, z_vel_ref, 'k--')
+        # plt.ylabel('vel')
+        # plt.grid(True)
+        # plt.legend(loc='upper left')
+        # plt.subplot(2,2,2)
+        # plt.plot(timestamp, agv_x, 'r', timestamp, agv_y, 'g', timestamp, agv_z, 'b', timestamp, agv_x_ref, 'y--', timestamp, agv_y_ref, 'm--', timestamp, agv_z_ref, 'k--')
+        # plt.ylabel('agv')
+        # plt.grid(True)
+        # plt.legend(loc='upper left')
+        # plt.subplot(2,2,3)
+        # plt.plot(timestamp, pos_x, 'r', timestamp, pos_y, 'g', timestamp, pos_z, 'b', timestamp, x_ref, 'y--', timestamp, y_ref, 'm--', timestamp, z_ref, 'k--')
+        # plt.ylabel('pos')
+        # plt.grid(True)
+        # plt.legend(loc='upper left')
+        # plt.subplot(2,2,4)
+        # plt.plot(timestamp, roll, 'r', timestamp, pitch, 'g', timestamp, yaw, 'b', timestamp, roll_ref, 'y--', timestamp, pitch_ref, 'm--', timestamp, yaw_ref, 'k--')
+        # plt.ylabel('rpy')
+        # plt.grid(True)
+        # plt.legend(loc='upper left')
 		
-        plt.show()
+        # plt.show()
 
     def plot_base(self):
         n = len(self.log_memory)
@@ -224,9 +206,6 @@ class Logger():
         agv_z_ref = log_memory_array[:, i]; i+=1
         print('i=%s ' %i)
         
-        # plt.rcParams["figure.figsize"] = [15.0, 15.0]
-        # plt.rcParams["figure.autolayout"] = True
-        # figure, axes = plt.subplots(2, 2)
         fig = plt.figure(figsize=(15, 15))
         ax0 = fig.add_axes([0.05, 0.05, 0.45, 0.45])
         ax0.plot(timestamp, vel_x, 'r', timestamp, vel_y, 'g', timestamp, vel_z, 'b', timestamp, x_vel_ref, 'y--', timestamp, y_vel_ref, 'm--', timestamp, z_vel_ref, 'k--')
@@ -251,25 +230,70 @@ class Logger():
 
         plt.show()
 
-        # plt.subplot(2,2,1)
-        # plt.plot(timestamp, vel_x, 'r', timestamp, vel_y, 'g', timestamp, vel_z, 'b', timestamp, x_vel_ref, 'y--', timestamp, y_vel_ref, 'm--', timestamp, z_vel_ref, 'k--')
-        # plt.ylabel('vel')
+    def plot_all(self, timestamp, pos_x, pos_y, pos_z, x_ref, y_ref, z_ref, vel_x, vel_y, vel_z, x_vel_ref, y_vel_ref, z_vel_ref,
+                roll, pitch, yaw, roll_ref, pitch_ref, yaw_ref, agv_x, agv_y, agv_z, agv_x_ref, agv_y_ref, agv_z_ref):
+        plt.figure(figsize=(15, 15))
+        plt.subplot(2,2,1)
+        plt.plot(timestamp, vel_x, 'r', timestamp, vel_y, 'g', timestamp, vel_z, 'b', timestamp, x_vel_ref, 'y--', timestamp, y_vel_ref, 'm--', timestamp, z_vel_ref, 'k--')
+        plt.ylabel('vel')
+        plt.grid(True)
+        plt.legend(loc='upper left')
+        plt.subplot(2,2,2)
+        plt.plot(timestamp, agv_x, 'r', timestamp, agv_y, 'g', timestamp, agv_z, 'b', timestamp, agv_x_ref, 'y--', timestamp, agv_y_ref, 'm--', timestamp, agv_z_ref, 'k--')
+        plt.ylabel('agv')
+        plt.grid(True)
+        plt.legend(loc='upper left')
+        plt.subplot(2,2,3)
+        plt.plot(timestamp, pos_x, 'r', timestamp, pos_y, 'g', timestamp, pos_z, 'b', timestamp, x_ref, 'y--', timestamp, y_ref, 'm--', timestamp, z_ref, 'k--')
+        plt.ylabel('pos')
+        plt.grid(True)
+        plt.legend(loc='upper left')
+        plt.subplot(2,2,4)
+        plt.plot(timestamp, roll, 'r', timestamp, pitch, 'g', timestamp, yaw, 'b', timestamp, roll_ref, 'y--', timestamp, pitch_ref, 'm--', timestamp, yaw_ref, 'k--')
+        plt.ylabel('rpy')
+        plt.grid(True)
+        plt.legend(loc='upper left')
+		
+        plt.show()
+    
+    def plot_attitude(self, timestamp, roll, pitch, yaw, roll_ref, pitch_ref, yaw_ref, agv_x, agv_y, agv_z, agv_x_ref, agv_y_ref, agv_z_ref):
+        plt.figure(figsize=(20, 15))
+        plt.subplot(2,3,1)
+        plt.plot(timestamp, roll, 'r', timestamp, roll_ref, 'b--', linewidth=2)
+        plt.ylabel('roll')
+        plt.grid(True)
+        plt.legend(['roll', 'roll_ref'], loc='upper left')
+        plt.subplot(2,3,2)
+        plt.plot(timestamp, pitch, 'r', timestamp, pitch_ref, 'b--', linewidth=2)
+        plt.ylabel('pitch')
+        plt.grid(True)
+        plt.legend(['pitch', 'pitch_ref'], loc='upper left')
+        plt.subplot(2,3,3)
+        plt.plot(timestamp, yaw, 'r', timestamp, yaw_ref, 'b--', linewidth=2)
+        plt.ylabel('yaw')
+        plt.grid(True)
+        plt.legend(['yaw', 'yaw_ref'], loc='upper left')
+        plt.subplot(2,3,4)
+        # plt.plot(timestamp, agv_x, 'r', timestamp, agv_x_ref, 'b--', linewidth=2)
+        # plt.ylabel('rollrate')
         # plt.grid(True)
-        # plt.subplot(2,2,2)
-        # plt.plot(timestamp, agv_x, 'r', timestamp, agv_y, 'g', timestamp, agv_z, 'b', timestamp, agv_x_ref, 'y--', timestamp, agv_y_ref, 'm--', timestamp, agv_z_ref, 'k--')
-        # plt.ylabel('agv')
-        # plt.grid(True)
-        # plt.subplot(2,2,3)
-        # plt.plot(timestamp, pos_x, 'r', timestamp, pos_y, 'g', timestamp, pos_z, 'b', timestamp, x_ref, 'y--', timestamp, y_ref, 'm--', timestamp, z_ref, 'k--')
-        # plt.ylabel('pos')
-        # plt.grid(True)
-        # plt.subplot(2,2,4)
-        # plt.plot(timestamp, roll, 'r', timestamp, pitch, 'g', timestamp, yaw, 'b', timestamp, roll_ref, 'y--', timestamp, pitch_ref, 'm--', timestamp, yaw_ref, 'k--')
-        # plt.ylabel('rpy')
-        # plt.grid(True)
-        # plt.legend()
+        # plt.legend(['rollrate', 'rollrate_ref'], loc='upper left')
+        plt.plot(timestamp, agv_x, 'r', linewidth=2)
+        plt.ylabel('rollrate')
+        plt.grid(True)
+        plt.legend(['rollrate'], loc='upper left')
+        plt.subplot(2,3,5)
+        plt.plot(timestamp, agv_y, 'r', timestamp, agv_y_ref, 'b--', linewidth=2)
+        plt.ylabel('pitchrate')
+        plt.grid(True)
+        plt.legend(['pitchrate', 'pitchrate_ref'], loc='upper left')
+        plt.subplot(2,3,6)
+        plt.plot(timestamp, agv_z, 'r', timestamp, agv_z_ref, 'b--', linewidth=2)
+        plt.ylabel('yawrate')
+        plt.grid(True)
+        plt.legend(['yawrate', 'yawrate_ref'], loc='upper left')
 
-        # plt.show()
+        plt.show()
 
 if __name__ == "__main__":
     logger = Logger()

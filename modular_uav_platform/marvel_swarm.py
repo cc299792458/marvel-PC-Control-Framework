@@ -110,7 +110,7 @@ class Swarm():
 
     def _stop(self):
         for i in range(self.marvel_num):
-            self.marvel_swarm_handle[i]._stop_crazyflie()
+            self.marvel_swarm_handle[i].stop_crazyflie()
         # self.logger.savelog()
         # self.logger.plot()
     

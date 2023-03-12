@@ -189,12 +189,6 @@ class Master():
         self.logger.savelog()
         self.logger.plot()
 
-        # if self.swarm.mode == 0:
-        #     self.swarm.logger.savelog()
-        #     self.logger.plot()
-        # elif self.swarm.mode == 1:
-        #     self.logger.savelog()
-        #     self.logger.plot()
         time.sleep(0.1)
 
 def main():
