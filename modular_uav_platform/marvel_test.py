@@ -3,6 +3,7 @@ import time
 import cflib
 from marvel import Marvel
 from marvel_logger import Logger
+from marvel_keyboard import KeyboardInput
 
 def send_twoD_setpoint_test(marvel):
     print('twoD test')
@@ -46,7 +47,7 @@ def send_position_setpoint_test(marvel):
     marvel.stop_crazyflie()
     print('Stop')
 
-def send_attitude_setpoint_test(marvel, logger):
+def send_attitude_setpoint_test(marvel, logger, keyboard):
     print("attitude test")
     roll_d, pitch_d, yawrate_d, thrust_d = 0.0, 0.0, 0.0, 20000
     current_time = time.time()
@@ -63,6 +64,10 @@ def send_attitude_setpoint_test(marvel, logger):
             # pitch_d = 0.0
         # elif current_time - start_time < 20:
         #     pitch_d = 0.0
+        keyboard.command.update()
+        if keyboard.stop == 1:
+            marvel.stop_crazyflie()
+            break
         marvel.send_attitude_setpoint(roll_d, pitch_d, yawrate_d, thrust_d)
         if current_time - last_time > 0.01:
             rpy_s = marvel.pos_and_rot[3:6]
@@ -85,6 +90,7 @@ if __name__ == '__main__':
     
     marvel = Marvel(link_uri, 0)
     logger = Logger(1)
+    keyboard = KeyboardInput()
     
     time.sleep(2)
     # marvel.set_quad_pid()
@@ -94,4 +100,4 @@ if __name__ == '__main__':
     # marvel.set_controller(False)
     # send_twoD_setpoint_test(marvel)
 
-    send_attitude_setpoint_test(marvel, logger)
+    send_attitude_setpoint_test(marvel, logger, keyboard)
