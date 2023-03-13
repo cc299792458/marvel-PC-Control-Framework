@@ -7,6 +7,8 @@ import numpy as np
 
 from math import sin, cos, atan2, asin
 
+PI = 3.1415926
+
 def bin2int(int_bin):
     return struct.unpack('>I', int_bin)[0]
 
@@ -35,6 +37,9 @@ def quat2rpy(w, x, y, z):
     roll, pitch, yaw = phi, theta, psi
 
     return roll, pitch, yaw
+
+def rad2deg(angle):
+    return angle*180/PI
 
 if __name__ == '__main__':
     # Check in website: https://quaternions.online/

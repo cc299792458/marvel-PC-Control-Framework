@@ -125,7 +125,7 @@ class Master():
         pass
 
     def _init_swarm(self):
-        self.swarm = Swarm(num=self.marvel_num, mode=self.mode, control_mode=self.control_mode)
+        self.swarm = Swarm(ip='192.168.50.2', num=self.marvel_num, mode=self.mode, control_mode=self.control_mode)
         print("------First Step Initialization Completed------")
         self.p_swarm = mp.Process(target=self.swarm.run, args=(self.take_off_shared, self.switch_mode_shared, self.stop_shared,
                                                                 # Use for swarm

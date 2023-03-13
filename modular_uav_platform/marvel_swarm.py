@@ -3,6 +3,7 @@ Author: Chi Chu
 """
 
 import time
+import socket
 import config
 import cflib.crtp
 import multiprocessing as mp
@@ -12,7 +13,7 @@ from marvel_logger import Logger
 from utils import rpy2quat, quat2rpy
 
 class Swarm():
-    def __init__(self, num=config.MARVEL_NUM, mode=True, control_mode='position'):
+    def __init__(self, ip, num=config.MARVEL_NUM, mode=True, control_mode='position'):
         """
             Swarm has 2 mode: Swarm and CombinedPlatform
         """
@@ -21,6 +22,8 @@ class Swarm():
         self.control_mode = control_mode  #'position': x, y, z, yaw
         self._init_time()
         # self._init_logger()
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.ip = ip
 
     def run(self, take_off_shared, switch_mode_shared, stop_shared,
             # Use for swarm
@@ -80,10 +83,20 @@ class Swarm():
             if self.mode == False:
                 self.mode = True
                 #TODO send switch command here
+                self.client.connect((self.ip, 80))
+                # for i in range(5):
+                data = 'o'
+                self.client.send(bytes(data, 'utf-8'))
+                self.client.close()
         elif switch_mode_shared.value == 0:
             if self.mode == True:
                 self.mode = False
                 #TODO send switch command here
+                self.client.connect((self.ip, 80))
+                # for i in range(5):
+                data = 'c'
+                self.client.send(bytes(data, 'utf-8'))
+                self.client.close()
 
     def _send_extpose(self, pos_shared, quat_shared):
         for i in range(self.marvel_num):

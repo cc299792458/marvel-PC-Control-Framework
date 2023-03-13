@@ -18,6 +18,7 @@ from cflib.crazyflie.log import LogConfig
 from cflib.positioning.motion_commander import MotionCommander
 
 from marvel_logger import Logger
+from utils import rad2deg
 
 logging.basicConfig(level=logging.ERROR)
 
@@ -197,37 +198,37 @@ class Marvel:
 
     def _pos_and_rot_log_data(self, timestamp, data, logconf):
         self.timestamp = timestamp
-        self.pos_and_rot[0] = data['stateEstimate.x']
+        self.pos_and_rot[0] = data['stateEstimate.x']                #[m]
         self.pos_and_rot[1] = data['stateEstimate.y']
         self.pos_and_rot[2] = data['stateEstimate.z']
-        self.pos_and_rot[3] = data['stateEstimate.roll']
+        self.pos_and_rot[3] = data['stateEstimate.roll']             #[deg]
         self.pos_and_rot[4] = data['stateEstimate.pitch']
         self.pos_and_rot[5] = data['stateEstimate.yaw']
 
     def _velocity_log_data(self, timestamp, data, logconf):
         self.timestamp = timestamp
-        self.velocity[0] = data['stateEstimate.vx']
+        self.velocity[0] = data['stateEstimate.vx']                  #[m/s]
         self.velocity[1] = data['stateEstimate.vy']
         self.velocity[2] = data['stateEstimate.vz']
-        self.velocity[3] = data['controller.r_roll']
-        self.velocity[4] = data['controller.r_pitch']
-        self.velocity[5] = data['controller.r_yaw']
+        self.velocity[3] = rad2deg(data['controller.r_roll'])        #[radian/s]->[deg/s]
+        self.velocity[4] = rad2deg(data['controller.r_pitch'])
+        self.velocity[5] = rad2deg(data['controller.r_yaw'])
     
     def _target_pos_and_rot_log_data(self, timestamp, data, logconf):
         self.timestamp = timestamp
-        self.target_pos_and_rot[0] = data['ctrltarget.x']
-        self.target_pos_and_rot[1] = data['ctrltarget.y']
+        self.target_pos_and_rot[0] = data['ctrltarget.x']            #[m]
+        self.target_pos_and_rot[1] = data['ctrltarget.y']            
         self.target_pos_and_rot[2] = data['ctrltarget.z']
-        self.target_pos_and_rot[3] = data['controller.roll']
+        self.target_pos_and_rot[3] = data['controller.roll']         #[deg or no scale just number]
         self.target_pos_and_rot[4] = data['controller.pitch']
         self.target_pos_and_rot[5] = data['controller.yaw']
     
     def _target_velocity_log_data(self, timestamp, data, logconf):
         self.timestamp = timestamp
-        self.target_velocity[0] = data['ctrltarget.vx']
+        self.target_velocity[0] = data['ctrltarget.vx']              #[m/s or no scale just number], body coordinate
         self.target_velocity[1] = data['ctrltarget.vy']
         self.target_velocity[2] = data['ctrltarget.vz']
-        self.target_velocity[3] = data['controller.rollRate']
+        self.target_velocity[3] = data['controller.rollRate']        #[No scale, just number]
         self.target_velocity[4] = data['controller.pitchRate']
         self.target_velocity[5] = data['controller.yawRate']
 

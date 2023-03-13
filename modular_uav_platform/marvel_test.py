@@ -53,10 +53,10 @@ def send_attitude_setpoint_test(marvel, logger):
     start_time = current_time
     last_time = start_time
     while 1:
-        if current_time - start_time > 20:
+        if current_time - start_time > 10:
             break
         elif current_time - start_time < 5:
-            roll_d = 10.0
+            roll_d = 5.0
         # elif current_time - start_time < 10:
         #     pitch_d = 0.0
         # elif current_time - start_time < 15:
